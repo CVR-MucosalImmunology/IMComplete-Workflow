@@ -1,0 +1,10 @@
+README.md
+setup.py
+src/PyMComplete/__init__.py
+src/PyMComplete/bodenmiller_mcd_extract.py
+src/PyMComplete/check_setup.py
+src/PyMComplete/new_project.py
+src/PyMComplete.egg-info/PKG-INFO
+src/PyMComplete.egg-info/SOURCES.txt
+src/PyMComplete.egg-info/dependency_links.txt
+src/PyMComplete.egg-info/top_level.txt
