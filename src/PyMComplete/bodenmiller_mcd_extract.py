@@ -3,22 +3,22 @@ from tempfile import TemporaryDirectory
 import pandas as pd
 import tifffile as tiff
 import numpy as np
-#import imcsegpipe
-#from imcsegpipe.utils import sort_channels_by_mass
+import imcsegpipe
+from imcsegpipe.utils import sort_channels_by_mass
 import os
 
 def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
     
     os.chdir(os.path.join(rootdir, projdir))
 
-    acquisitions_dir = Path(os.path.join(projdir, "analysis/1_mcd_out"))
-    denoise_dir = Path( os.path.join(projdir, "analysis/2_denoise"))
-    segment_fold_dir = Path(os.path.join(projdir, "analysis/3_segmentation"))
+    acquisitions_dir = Path(os.path.join(rootdir, projdir, "analysis/1_mcd_out"))
+    denoise_dir = Path( os.path.join(rootdir, projdir, "analysis/2_denoise"))
+    segment_fold_dir = Path(os.path.join(rootdir, projdir, "analysis/3_segmentation"))
     segment_dir = Path(os.path.join(segment_fold_dir, "3b_forSeg"))
     output_dir = Path( os.path.join(segment_fold_dir, "3a_fullstack"))
 
     # Raw directory with raw data files
-    raw = Path(os.path.join(projdir ,"raw"))
+    raw = Path(os.path.join(rootdir, projdir ,"raw"))
 
     # Step 1: Extract .mcd files
     temp_dirs = []
