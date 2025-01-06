@@ -7,17 +7,18 @@ from skimage import io, exposure, img_as_uint
 def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1):
 
     # Set working directory
+    
     os.chdir(os.path.join(rootdir, projdir))
 
     # Define directories
-    dir_images = os.path.join(curdir, "analysis", "3_segmentation", "3b_forSeg")
-    im_output = os.path.join(curdir, "analysis", "3_segmentation", "3d_cellpose_full")
-    crop_output = os.path.join(curdir, "analysis", "3_segmentation", "3c_cellpose_crop")
-    panel_file = os.path.join(curdir, "panel.csv")
+    dir_images = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3b_forSeg")
+    im_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3d_cellpose_full")
+    crop_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3c_cellpose_crop")
+    panel_file = os.path.join(rootdir, projdir, "panel.csv")
 
     # Check for extra folder condition
     if extra:
-        im_extra_output = os.path.join(curdir, "analysis", "3_segmentation-adipo", "3d_cellpose_full_extra")
+        im_extra_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation-adipo", "3d_cellpose_full_extra")
         os.makedirs(im_extra_output, exist_ok=True)
 
     # Load image list
