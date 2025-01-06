@@ -7,9 +7,9 @@ import imcsegpipe
 from imcsegpipe.utils import sort_channels_by_mass
 import os
 
-def bodenmiller_mcd_extract(projdir, denoise=1, panel="panel.csv"):
+def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
     
-    os.chdir(projdir)
+    os.chdir(os.path.join(rootdir, projdir))
 
     acquisitions_dir = Path(os.path.join(projdir, "analysis/1_mcd_out"))
     denoise_dir = Path( os.path.join(projdir, "analysis/2_denoise"))
