@@ -3,7 +3,9 @@ setup.py
 src/PyMComplete/__init__.py
 src/PyMComplete/bodenmiller_mcd_extract.py
 src/PyMComplete/check_setup.py
+src/PyMComplete/denoise_convert.py
 src/PyMComplete/new_project.py
+src/PyMComplete/prep_cellpose.py
 src/PyMComplete.egg-info/PKG-INFO
 src/PyMComplete.egg-info/SOURCES.txt
 src/PyMComplete.egg-info/dependency_links.txt

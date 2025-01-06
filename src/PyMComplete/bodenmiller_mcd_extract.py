@@ -3,8 +3,8 @@ from tempfile import TemporaryDirectory
 import pandas as pd
 import tifffile as tiff
 import numpy as np
-import imcsegpipe
-from imcsegpipe.utils import sort_channels_by_mass
+#import imcsegpipe
+#from imcsegpipe.utils import sort_channels_by_mass
 import os
 
 def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
