@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from skimage import io, exposure, img_as_uint
 
-def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1):
+def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
 
     # Set working directory
     
