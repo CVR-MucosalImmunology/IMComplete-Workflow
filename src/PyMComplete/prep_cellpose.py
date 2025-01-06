@@ -6,10 +6,6 @@ from skimage import io, exposure, img_as_uint
 
 def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
 
-    # Set working directory
-    
-    os.chdir(os.path.join(rootdir, projdir))
-
     # Define directories
     dir_images = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3b_forSeg")
     im_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3d_cellpose_full")
@@ -18,15 +14,16 @@ def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
 
     # Check for extra folder condition
     if extra:
-        im_extra_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation-adipo", "3d_cellpose_full_extra")
+        im_extra_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3d_cellpose_full_extra")
         os.makedirs(im_extra_output, exist_ok=True)
 
     # Load image list
     image_list = [f for f in os.listdir(dir_images) if f.endswith(('.tiff', '.tif'))]
 
-    # Read panel.csv
+        # Read panel.csv
     panel = pd.read_csv(panel_file)
     segmentation_targets = panel.loc[panel['Segment'] == 1, 'Target'].tolist()
+
     print("Segmentation Targets:", segmentation_targets)
 
     dna_index = [i for i, target in enumerate(segmentation_targets) if target == dna]
@@ -38,6 +35,7 @@ def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
 
         # Normalize image
         normalized_stack = []
+        
         for i in range(image.shape[0]):
             channel = image[i, :, :]
             normalized = exposure.rescale_intensity(channel, in_range='image', out_range=(0, 1))
@@ -56,11 +54,11 @@ def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
         empty_channel = np.zeros_like(dna_channel, dtype=np.uint16)
         composite_stack = np.stack([empty_channel, surface_mask, dna_channel])
 
-        # Save full composite image
+            # Save full composite image
         im_output_path = os.path.join(im_output, f"{im_title}_CpSeg.tiff")
         io.imsave(im_output_path, composite_stack)
 
-        # Cropping
+            # Cropping
         height, width = composite_stack.shape[1:3]
         if width < square_size or height < square_size:
             crop_output_path = os.path.join(crop_output, f"{im_title}_CpCrop.tiff")
@@ -76,18 +74,30 @@ def prep_cellpose(rootdir, projdir, dna = "DNA", extra=1, square_size=200):
         crop_output_path = os.path.join(crop_output, f"{im_title}_CpCrop.tiff")
         io.imsave(crop_output_path, cropped)
 
-        # Extra folder operations
+            # Extra folder operations
         if extra:
             extra_image_output = os.path.join(im_extra_output, im_title)
             os.makedirs(extra_image_output, exist_ok=True)
 
-            # Save each slice as individual TIFF
-            for idx, target in enumerate(panel['Target']):
+                # Save each slice as individual TIFF
+            for idx, target in enumerate(segmentation_targets):
                 slice_path = os.path.join(extra_image_output, f"{target}.tiff")
-                io.imsave(slice_path, normalized_stack[idx])
+                io.imsave(slice_path, normalized_stack2[idx])
 
-            # Create and save stackplusone
-            stackplusone = np.concatenate((normalized_stack, composite_stack), axis=0)
+                # Create and save stackplusone
+            stackplusone = []
+        
+            for i in range(image.shape[0]):
+                channel = image[i, :, :]
+                normalized = exposure.rescale_intensity(channel, in_range='image', out_range=(0, 1))
+                stackplusone.append(img_as_uint(normalized))
+
+            stackplusone.append(img_as_uint(surface_mask)) # add the surface mask
+            stackplusone = np.stack(stackplusone)
+            for idx, target in enumerate(segmentation_targets):
+                slice_path = os.path.join(extra_image_output, f"{target}.tiff")
+                io.imsave(slice_path, stackplusone[idx])
+
             stackplusone_path = os.path.join(extra_image_output, "stackplusone.tiff")
             io.imsave(stackplusone_path, stackplusone)
 

@@ -9,6 +9,7 @@ import os
 
 def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
     
+    print("Gathering Directories...")
     os.chdir(os.path.join(rootdir, projdir))
 
     acquisitions_dir = Path(os.path.join(rootdir, projdir, "analysis/1_mcd_out"))
@@ -20,6 +21,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
     # Raw directory with raw data files
     raw = Path(os.path.join(rootdir, projdir ,"raw"))
 
+    print("Extracting MCD...")
     # Step 1: Extract .mcd files
     temp_dirs = []
     try:
@@ -50,6 +52,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
 
     # Read the panel.csv
     panel = pd.read_csv("panel.csv")
+    print("Generating Fullstacks...")
 
     # Step 2: Generate image stacks (_full and _segment)
     for acquisition_dir in acquisitions_dir.glob("[!.]*"):
@@ -75,6 +78,8 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
 
     # Step 3: Process TIFFs for denoising
     if denoise:
+        print("Generating Denoise output...")
+
         for sample_dir in acquisitions_dir.glob("[!.]*"):
             if sample_dir.is_dir():
                 for roi_tiff_path in sample_dir.glob("*.tiff"):
