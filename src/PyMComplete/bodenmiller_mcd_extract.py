@@ -12,7 +12,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
     print("Gathering Directories...")
     os.chdir(os.path.join(rootdir, projdir))
 
-    acquisitions_dir = Path(os.path.join(rootdir, projdir, "analysis/1_mcd_out"))
+    acquisitions_dir = Path(os.path.join(rootdir, projdir, "analysis/1_image_out"))
     denoise_dir = Path( os.path.join(rootdir, projdir, "analysis/2_denoise"))
     segment_fold_dir = Path(os.path.join(rootdir, projdir, "analysis/3_segmentation"))
     segment_dir = Path(os.path.join(segment_fold_dir, "3b_forSeg"))
@@ -61,7 +61,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
                 acquisition_dir=acquisition_dir,
                 analysis_dir=output_dir,
                 analysis_channels=sort_channels_by_mass(
-                    panel.loc[panel["Full"] == 1, "Metal Tag"].tolist()
+                    panel.loc[panel["Full"] == 1, "Conjugate"].tolist()
                 ),
                 suffix="_full",
                 hpf=50.0
@@ -70,7 +70,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
                 acquisition_dir=acquisition_dir,
                 analysis_dir=segment_dir,
                 analysis_channels=sort_channels_by_mass(
-                    panel.loc[panel["Segment"] == 1, "Metal Tag"].tolist()
+                    panel.loc[panel["Segment"] == 1, "Conjugate"].tolist()
                 ),
                 suffix="_segment",
                 hpf=50.0
@@ -93,7 +93,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
 
                     # Filter and unstack based on panel.csv
                     for idx, row in panel[panel["Full"] == 1].iterrows():
-                        metal_tag = row["Metal Tag"]
+                        metal_tag = row["Conjugate"]
                         target = row["Target"]
                         output_name = f"{metal_tag}-{target}_{metal_tag}.tiff"
                         output_path = roi_subdir / output_name

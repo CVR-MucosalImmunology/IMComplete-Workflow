@@ -1,9 +1,8 @@
 import subprocess
 import sys
 import pkg_resources
-import torch
 
-def check_setup():
+def check_setup(torch=1):
     """
     Checks for required Python packages and verifies CUDA installation.
 
@@ -15,9 +14,26 @@ def check_setup():
     required_packages = {
         "imcsegpipe": "1.0.0",
         "readimc": "0.8.0",
-        "imc-denoise": "0.0.0",
-       # "test1":"",
-       # "test":"0",
+        "pip": "",
+        "numpy": "",
+        "jupyterlab": "",
+        "jupytext": "",
+        "cellpose" : "",
+        "pyqtgraph": "",
+        "numba": "",
+        "scipy": "",
+        "natsort": "",
+        "tifffile": "2024.8.10",
+        "brotlipy": "",
+        "matplotlib": "",
+        "pandas": "", 
+        "panel": "", 
+        "opencv-python": "", 
+        "scikit-image": "",
+        "ipywidgets" : "",
+        "jupyter" : "",
+        "ipykernel" : "",
+        "plotly": "",
     }
 
     missing_packages = {}
@@ -40,10 +56,12 @@ def check_setup():
     else:
         print("  All required packages are installed and meet the required versions.")
 
-    print("\n-----------------\n\nChecking that CUDA has been installed properly...\n")
-    if torch.cuda.is_available():
-        print("  GPU acceleration via CUDA is available")
-    else:
-        print("  GPU acceleration has not been prepared. Consult https://pytorch.org/get-started/previous-versions/\nand try again")
+    if torch:
+        import torch
+        print("\n-----------------\n\nChecking that CUDA has been installed properly...\n")
+        if torch.cuda.is_available():
+            print("  GPU acceleration via CUDA is available")
+        else:
+            print("  GPU acceleration has not been prepared. Consult https://pytorch.org/get-started/previous-versions/\nand try again")
 
 

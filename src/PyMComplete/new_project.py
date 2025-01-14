@@ -10,7 +10,7 @@ def newProj(rootdir, projdir):
     """
 
     # Define all required subdirectories
-    acquisitions_dir = os.path.join(rootdir, projdir, "analysis/1_mcd_out")
+    acquisitions_dir = os.path.join(rootdir, projdir, "analysis/1_image_out")
     denoise_dir = os.path.join(rootdir, projdir, "analysis/2_denoise")
     segment_fold_dir = os.path.join(rootdir, projdir, "analysis/3_segmentation")
     output_dir = os.path.join(segment_fold_dir, "3a_fullstack")
@@ -22,7 +22,7 @@ def newProj(rootdir, projdir):
     pyprof_out = os.path.join(rootdir, projdir, "analysis/4_cellprofiler_output")
 
     # Create directories
-    os.makedirs(rootdir, projdir, exist_ok=True)
+    os.makedirs(os.path.join(rootdir, projdir), exist_ok=True)
     os.makedirs(os.path.join(rootdir, projdir, "raw"), exist_ok=True)
     os.makedirs(os.path.join(rootdir, projdir, "analysis"), exist_ok=True)
     os.makedirs(acquisitions_dir, exist_ok=True)

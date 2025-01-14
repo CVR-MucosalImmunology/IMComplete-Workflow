@@ -5,7 +5,7 @@ setup(
     version="0.0.1",
     package_dir={"": "src"}, 
     packages=find_packages(where="src"),  
-    description="The functions for the IMComplete preprocessing workflow wrapped up in a package",
+    description="The functions for the IMComplete preprocessing workflow are wrapped up in this small package called PyMComplete",
     author="Thomas O'Neil",
     author_email="thomas.oneil@sydney.edu.au",
     url="https://github.com/CVR-MucosalImmunology/IMComplete-Workflow",  # Optional
