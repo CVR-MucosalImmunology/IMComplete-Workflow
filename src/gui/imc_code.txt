@@ -1,0 +1,5 @@
+from PyMComplete import bodenmiller_mcd_extract
+
+bodenmiller_mcd_extract(rootdir=rootdir,
+                                    projdir=projdir, 
+                                    panel="panel.csv")

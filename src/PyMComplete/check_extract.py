@@ -109,10 +109,8 @@ def check_extract(
     if not subfolders:
         raise ValueError(f"No subfolders found in {raw_dir}.")
 
-    # --------------------------------------------------------------------------
-    # 2. Build the interactive widgets
-    # --------------------------------------------------------------------------
-    # Dropdown to pick which image (subfolder)
+    # Build the  widget
+    ### Dropdown to pick which image
     image_dropdown = widgets.Dropdown(
         options=subfolders,
         description='Image:',
@@ -132,12 +130,14 @@ def check_extract(
         disabled=False,
         layout=widgets.Layout(width='160px')
     )
+
     hp_neighborhood_text = widgets.IntText(
         value=3,
         description='HP Neigh:',
         disabled=False,
         layout=widgets.Layout(width='160px')
     )
+    
     gauss_sigma_text = widgets.FloatText(
         value=1.0,
         description='Gauss σ:',

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PyMComplete
-Version: 0.0.1
+Version: 0.0.2
 Summary: The functions for the IMComplete preprocessing workflow are wrapped up in this small package called PyMComplete
 Home-page: https://github.com/CVR-MucosalImmunology/IMComplete-Workflow
 Author: Thomas O'Neil

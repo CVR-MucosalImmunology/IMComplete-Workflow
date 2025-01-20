@@ -6,19 +6,18 @@ import numpy as np
 import imcsegpipe
 from imcsegpipe.utils import sort_channels_by_mass
 import os
+import csv
 
-def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
-    
+def bodenmiller_mcd_extract(rootdir, projdir, panel="panel.csv"):
+
     print("Gathering Directories...")
     os.chdir(os.path.join(rootdir, projdir))
 
-    acquisitions_dir = Path(os.path.join(rootdir, projdir, "analysis/1_image_out"))
-    denoise_dir = Path( os.path.join(rootdir, projdir, "analysis/2_denoise"))
+    images_dir = Path(os.path.join(rootdir, projdir, "analysis/1_image_out"))
     segment_fold_dir = Path(os.path.join(rootdir, projdir, "analysis/3_segmentation"))
     segment_dir = Path(os.path.join(segment_fold_dir, "3b_forSeg"))
-    output_dir = Path( os.path.join(segment_fold_dir, "3a_fullstack"))
+    output_dir = Path(os.path.join(segment_fold_dir, "3a_fullstack"))
 
-    # Raw directory with raw data files
     raw = Path(os.path.join(rootdir, projdir ,"raw"))
 
     print("Extracting MCD...")
@@ -42,23 +41,28 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
                 for mcd_file in mcd_files:
                     imcsegpipe.extract_mcd_file(
                         mcd_file,
-                        acquisitions_dir / mcd_file.stem,
+                        images_dir / mcd_file.stem,
                         txt_files=matched_txt_files[mcd_file]
                     )
     finally:
         for temp_dir in temp_dirs:
             temp_dir.cleanup()
         del temp_dirs
+    
+    samples = [
+        ['Image','ImShort','ROI','ImageID','DonorID','Condition', "Crop"]
+    ]
 
     # Read the panel.csv
     panel = pd.read_csv("panel.csv")
     print("Generating Fullstacks...")
 
     # Step 2: Generate image stacks (_full and _segment)
-    for acquisition_dir in acquisitions_dir.glob("[!.]*"):
-        if acquisition_dir.is_dir():
+    for image_dir in images_dir.glob("[!.]*"):
+        if image_dir.is_dir():
+            samples.append([image_dir.name,'','','','','',''])
             imcsegpipe.create_analysis_stacks(
-                acquisition_dir=acquisition_dir,
+                acquisition_dir=image_dir,
                 analysis_dir=output_dir,
                 analysis_channels=sort_channels_by_mass(
                     panel.loc[panel["Full"] == 1, "Conjugate"].tolist()
@@ -67,7 +71,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
                 hpf=50.0
             )
             imcsegpipe.create_analysis_stacks(
-                acquisition_dir=acquisition_dir,
+                acquisition_dir=image_dir,
                 analysis_dir=segment_dir,
                 analysis_channels=sort_channels_by_mass(
                     panel.loc[panel["Segment"] == 1, "Conjugate"].tolist()
@@ -75,33 +79,40 @@ def bodenmiller_mcd_extract(rootdir, projdir, denoise=1, panel="panel.csv"):
                 suffix="_segment",
                 hpf=50.0
             )
+    # Specify the file name
+    filename = os.path.join(rootdir, projdir, "image.csv")
 
-    # Step 3: Process TIFFs for denoising
-    if denoise:
-        print("Generating Denoise output...")
+    # Writing to the CSV file
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(samples)
 
-        for sample_dir in acquisitions_dir.glob("[!.]*"):
-            if sample_dir.is_dir():
-                for roi_tiff_path in sample_dir.glob("*.tiff"):
-                    roi_name = roi_tiff_path.stem
-                    roi_subdir = denoise_dir / roi_name
-                    roi_subdir.mkdir(parents=True, exist_ok=True)
+#    # Step 3: Process TIFFs for denoising
+#    if denoise:
+#        print("Generating Denoise output...")
+#
+#        for sample_dir in images_dir.glob("[!.]*"):
+#            if sample_dir.is_dir():
+#                for roi_tiff_path in sample_dir.glob("*.tiff"):
+#                    roi_name = roi_tiff_path.stem
+#                    roi_subdir = denoise_dir / roi_name
+#                    roi_subdir.mkdir(parents=True, exist_ok=True)
 
-                    # Load the stack using tifffile
-                    with tiff.TiffFile(roi_tiff_path) as tif:
-                        stack = tif.asarray()  # Load the entire TIFF stack as a NumPy array
+#                    # Load the stack using tifffile
+#                    with tiff.TiffFile(roi_tiff_path) as tif:
+#                        stack = tif.asarray()  # Load the entire TIFF stack as a NumPy array
 
-                    # Filter and unstack based on panel.csv
-                    for idx, row in panel[panel["Full"] == 1].iterrows():
-                        metal_tag = row["Conjugate"]
-                        target = row["Target"]
-                        output_name = f"{metal_tag}-{target}_{metal_tag}.tiff"
-                        output_path = roi_subdir / output_name
+#                    # Filter and unstack based on panel.csv
+#                    for idx, row in panel[panel["Full"] == 1].iterrows():
+#                        metal_tag = row["Conjugate"]
+#                        target = row["Target"]
+#                        output_name = f"{metal_tag}-{target}_{metal_tag}.tiff"
+#                        output_path = roi_subdir / output_name
 
-                        # Extract the specific slice from the stack
-                        slice_image = stack[idx, :, :]  # Adjust indexing based on stack structure
+#                       # Extract the specific slice from the stack
+#                       slice_image = stack[idx, :, :]  # Adjust indexing based on stack structure
 
-                        # Save the slice as a TIFF
-                        tiff.imwrite(output_path, slice_image.astype(np.uint16))  # Save as 16-bit TIFF
+#                        # Save the slice as a TIFF
+#                        tiff.imwrite(output_path, slice_image.astype(np.uint16))  # Save as 16-bit TIFF
 
     print("Done!")

@@ -1,8 +1,8 @@
 name: IMComplete
 channels:
   - conda-forge
-  - nvidia
   - pytorch-lts
+  - nvidia
   - defaults
 dependencies:
   - python=3.10
@@ -25,11 +25,12 @@ dependencies:
   - ipywidgets 
   - jupyter 
   - ipykernel 
+  - ipympl
   - plotly
   - pip:
         - -e ./
         - -e ../ImcSegmentationPipeline
         - PyQt5 
         - cellpose[gui] 
-        - tensorflow 
-        - keras
+        - ttkbootstrap
+        - tkinter

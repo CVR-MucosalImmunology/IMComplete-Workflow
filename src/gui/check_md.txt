@@ -1,0 +1,5 @@
+# Check your Setup
+
+The following code can be used to check that you're set up was completed and you can start the workflow.
+
+The output will specify which packages are not installed and whether GPU is accessible.

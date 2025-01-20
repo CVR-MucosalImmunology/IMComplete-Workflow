@@ -1,0 +1,9 @@
+# Setting your project directory
+
+Set `rootdir` as your `ImageAnalysis` folder directory and `projdir` as your project folder name.
+
+With `projdir` inside `rootdir` it might look like:
+
+```shell
+/Users/thomasoneil/Desktop/ImagingAnalysis/IBD_IMC_Data
+```

@@ -1,0 +1,3 @@
+# Set up a new project
+
+The function below will set up the correct folder structure necessary for this workflow, as detailed above.

@@ -1,0 +1,68 @@
+# **Part A: Preprocessing of imaging data**  
+<i>**Latest update</i> - Dec 2024**  
+
+#### **Authors:**  
+[Oscar Dong](https://github.com/Awesomenous) (oscardong4@gmail.com) | [Thomas O'Neil](https://github.com/DrThomasOneil) (thomas.oneil@sydney.edu.au) | [Heeva Baharlou](heeva.baharlou@sydney.edu.com)  
+
+##### The purpose of this notebook is to provide a consolidated approach to IMC analysis and forms the prerequisite steps to the IMComplete R package workflow. We focused 
+
+Nature Method of the Year in 2024 was [**spatial proteomics**](https://www.nature.com/articles/s41592-024-02565-3). 
+
+> Computational tools for spatial proteomics are the focus of the second Comment, from Yuval Bussi and Leeat Keren. These authors note that current image processing and analysis workflow are well defined but fragmented, with various steps happening back to back rather than in an integrated fashion. They envision a future for the field where image processing and analysis steps work in concert for improved biological discovery.
+
+In response to these comments, we have committed to provide a comprehensive, complete and dynamic workflow. In part, we aimed to achieve this by compiling as much as we could into this pre-processing workflow. 
+
+Particularly, we hve
+
+<hr>
+
+Some scripts adapted from [BodenmillerGroup/ImcSegmentationPipeline](https://github.com/BodenmillerGroup/ImcSegmentationPipeline) & [PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise) 
+
+<i>**Therefore, make sure to also reference these studies:**</i>  
+- Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end workflow for multiplexed image processing and analysis. [Nat Protoc](https://doi.org/10.1038/s41596-023-00881-0) (2023).  
+- Lu P, Oetjen K, Bender D, et al. IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry. [Nature Communications](https://www.nature.com/articles/s41467-023-37123-6), 14(1), 1601, 2023.  
+
+<br>
+<hr>
+
+##### Planned future additions:  
+- Simple compartmentalisation in python widget
+- DAPI registration for improved cell segmentation
+- Integration with immunofluorescence
+- Integration with BIDCell - purpose to improve the initial segmentation mask prior to workflow.
+
+<br>
+<hr>
+
+# **What is in this workflow**
+
+This workflow aims to consolidate as many functions as possible in one python. The folder structure for this workflow is as follows:
+
+```text
+ImagingAnalysis/
+├── IMComplete-Workflow
+├── Experiment_name_1
+│     └── raw
+│            └── Sample1.zip
+│            └── Sample2.zip
+│            └── ...
+│     └── analysis
+│            └── 1_image_out
+│            └── 2_cleaned
+│            └── 3_segmentation
+│                   └── 3a_fullstack
+│                   └── 3b_forSeg
+│                   └── 3c_cellpose_crop
+│                   └── 3d_cellpose_full
+│                   └── 3e_cellpose_mask
+│                   └── 3f_compartments
+│            └── 4_pyprofiler_output
+│                   └── cell.csv
+│                   └── geometry.csv
+│            └── 5_R_analysis
+│     └── panel.csv
+│     └── images.csv
+├── ...
+├── Experiment_name_<i>N</i>
+```
+

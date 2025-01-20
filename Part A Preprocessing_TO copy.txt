@@ -182,7 +182,11 @@
     "```bash\n",
     "conda install pytorch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 pytorch-cuda=12.4 -c pytorch -c nvidia\n",
     "```\n",
+    "**Step 10:** Lastly, install Cellpose\n",
     "\n",
+    "```bash\n",
+    "python -m pip install PyQt5 cellpose[gui] tensorflow keras\n",
+    "```\n",
     "\n",
     "<hr>\n",
     "\n",
@@ -191,9 +195,26 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 2,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Checking required packages in the current Conda environment...\n",
+      "\n",
+      "  All required packages are installed and meet the required versions.\n",
+      "\n",
+      "-----------------\n",
+      "\n",
+      "Checking that CUDA has been installed properly...\n",
+      "\n",
+      "  GPU acceleration has not been prepared. Consult https://pytorch.org/get-started/previous-versions/\n",
+      "and try again\n"
+     ]
+    }
+   ],
    "source": [
     "from PyMComplete import check_setup\n",
     "\n",
@@ -215,24 +236,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": null,
    "metadata": {},
    "outputs": [],
    "source": [
     "rootdir = \"/Users/thomasoneil/Desktop/test_IF\"\n",
-    "projdir = \"LizIMCIFReg\""
+    "projdir = \"Jan17_IFtest\""
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Project 'LizIMCIFReg' created successfully.\n"
+      "Project 'project' created successfully.\n"
      ]
     }
    ],
@@ -272,7 +293,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -282,6 +303,7 @@
       "Gathering Directories...\n",
       "Extracting MCD...\n",
       "Generating Fullstacks...\n",
+      "Generating Denoise output...\n",
       "Done!\n"
      ]
     }
@@ -291,6 +313,7 @@
     "\n",
     "bodenmiller_mcd_extract(rootdir=rootdir,\n",
     "                                    projdir=projdir, \n",
+    "                                    denoise=1, \n",
     "                                    panel=\"panel.csv\")"
    ]
   },
@@ -353,9 +376,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 3,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "18b033dc57314054bcf59f43b985964b",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "VBox(children=(HBox(children=(Dropdown(description='Image:', layout=Layout(width='200px'), options=('COL_ARTPo…"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
    "source": [
     "from PyMComplete import check_extract\n",
     "\n",
@@ -363,24 +401,30 @@
     "    rootdir=rootdir,\n",
     "    projdir=projdir,\n",
     "    crop=200\n",
-    ")\n",
-    "\n",
-    "# To add a save_setting to panel.csv for filtering when extracting. \n",
-    "# To add similar function as below - select the crop, not random crop. "
+    ")"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Gathering Directories...\n",
+      "Done!\n",
+      "\n"
+     ]
+    }
+   ],
    "source": [
     "from PyMComplete import extract_images\n",
     "\n",
     "extract_images(rootdir=rootdir, \n",
     "               projdir=projdir, \n",
-    "               panel_filename=\"panel.csv\", \n",
-    "               )"
+    "               panel_filename=\"panel.csv\")"
    ]
   },
   {
@@ -394,64 +438,34 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "2a6ad4cacfe74aa1bc2aa14695a09b90",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "VBox(children=(HBox(children=(Dropdown(description='Image:', layout=Layout(width='200px'), options=('COL_ARTPo…"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Saved coords '924_406_206_300' for image 'COL_ARTPos_253471_s10_control_r1s1_channels' into image.csv.\n",
+      "Saved coords '924_406_206_300' for image 'COL_ARTPos_253471_s10_control_r1s1_channels' into image.csv.\n"
+     ]
+    }
+   ],
    "source": [
-    "%matplotlib widget\n",
-    "\n",
     "from PyMComplete import CropSelector\n",
     "\n",
     "CropSelector(rootdir, projdir)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Image registration\n",
-    "\n",
-    "Take a list of IF images and the DNA channel and register the IF to IMC\n",
-    "\n",
-    "Train the cellpose model\n",
-    "\n",
-    "Remake the cellpose prep images\n",
-    "\n",
-    "Train the model again\n",
-    "\n",
-    "Batch seg on all\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import cv2\n",
-    "import numpy as np\n",
-    "from skimage.transform import resize\n",
-    "from skimage.registration import phase_cross_correlation\n",
-    "\n",
-    "# Step 1: Load images\n",
-    "imc_image = cv2.imread('imc_dna_image.tif', cv2.IMREAD_GRAYSCALE)\n",
-    "dapi_image = cv2.imread('dapi_image.tif', cv2.IMREAD_GRAYSCALE)\n",
-    "\n",
-    "# Step 2: Resize IMC to match DAPI resolution\n",
-    "imc_resized = resize(imc_image, dapi_image.shape, anti_aliasing=True)\n",
-    "\n",
-    "# Step 3: Enhance features (optional)\n",
-    "dapi_edges = cv2.Canny(dapi_image, 50, 150)\n",
-    "imc_edges = cv2.Canny((imc_resized * 255).astype(np.uint8), 50, 150)\n",
-    "\n",
-    "# Step 4: Compute rigid transformation using cross-correlation\n",
-    "shift, error, diffphase = phase_cross_correlation(dapi_edges, imc_edges)\n",
-    "\n",
-    "# Apply translation\n",
-    "rows, cols = imc_resized.shape\n",
-    "M = np.float32([[1, 0, shift[1]], [0, 1, shift[0]]])\n",
-    "aligned_imc = cv2.warpAffine(imc_resized, M, (cols, rows))\n",
-    "\n",
-    "# Step 5: Save the aligned image\n",
-    "cv2.imwrite('aligned_imc_to_dapi.tif', (aligned_imc * 255).astype(np.uint8))"
    ]
   },
   {
@@ -491,7 +505,16 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid syntax (2939267591.py, line 1)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  Cell \u001b[0;32mIn[10], line 1\u001b[0;36m\u001b[0m\n\u001b[0;31m    python -m cellpose\u001b[0m\n\u001b[0m              ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+     ]
+    }
+   ],
    "source": [
     "python -m cellpose"
    ]
@@ -513,10 +536,10 @@
     "\n",
     "batch_segment(rootdir=rootdir,\n",
     "              projdir=projdir,\n",
-    "              model =None, \n",
-    "              builtin_model = \"tissuenet_cp3\", \n",
+    "              model =\"CP_20250110_151059\", \n",
+    "              builtin_model = None, \n",
     "              channels = [2, 3],\n",
-    "              cell_diameter =14.1, \n",
+    "              cell_diameter = ,\n",
     "              flow_threshold = 1,\n",
     "              cellprob_threshold = -3\n",
     "              )\n"
@@ -614,7 +637,35 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Using device: cpu\n",
+      "No folders found in the compartments directory. Disabling compartment processing.\n",
+      "Processing COL_HIVneg_729593_s1_test_r1s1_channels...\n",
+      "Processing COL_ARTPos_253471_s10_test_r1s1_channels...\n",
+      "Processing COL_HIVneg_958700_s13_control_r1s1_channels...\n",
+      "Processing COL_ARTPos_608647_s14_control_r1s1_channels...\n",
+      "Processing COL_ARTPos_916034_s19_test_r1s2_channels...\n",
+      "Processing COL_HIVneg_958700_s13_test_r1s1_channels...\n",
+      "Processing COL_HIVneg_236532_s5_test_r1s1_channels...\n",
+      "Processing COL_ARTPos_916034_s19_control_r1s1_channels...\n",
+      "Processing COL_HIVneg_453548_s8_test_r1s1_channels...\n",
+      "Processing COL_ARTPos_564855_s12_test_r1s1_channels...\n",
+      "Processing COL_ARTPos_608647_s14_test_r1s1_channels...\n",
+      "Processing COL_ARTPos_253471_s10_control_r1s1_channels...\n",
+      "Processing COL_HIVneg_453548_s8_control_r1s1_channels...\n",
+      "Processing COL_ARTPos_564855_s12_control_r1s1_channels...\n",
+      "Processing COL_HIVneg_729593_s1_control_r1s1_channels...\n",
+      "Processing COL_HIVneg_236532_s5_control_r1s1_channels...\n",
+      "Processing complete.\n",
+      "Total time taken: 72.27561712265015\n",
+      "Results saved to /Users/thomasoneil/Desktop/test_IF/project/analysis/4_pyprofiler_output/cell_data_combined.csv\n"
+     ]
+    }
+   ],
    "source": [
     "from PyMComplete import pyprofiler\n",
     "\n",
@@ -628,20 +679,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {},
-   "outputs": [
-    {
-     "ename": "SyntaxError",
-     "evalue": "unmatched ')' (1202944836.py, line 1)",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[0;36m  Cell \u001b[0;32mIn[5], line 1\u001b[0;36m\u001b[0m\n\u001b[0;31m    print((182*12)/52))\u001b[0m\n\u001b[0m                      ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m unmatched ')'\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
-    "print((182*12)/52))"
+    "import csv\n",
+    "\n",
+    "# Data to be written to the CSV file\n",
+    "panel = [\n",
+    "    [\"Conjugate\", \"Target\", \"Full\", \"Segment\"]\n",
+    "]\n",
+    "\n",
+    "# Specify the file name\n",
+    "filename = \"/Users/thomasoneil/Desktop/panel.csv\"\n",
+    "\n",
+    "# Writing to the CSV file\n",
+    "with open(filename, mode='w', newline='') as file:\n",
+    "    writer = csv.writer(file)\n",
+    "    writer.writerows(panel)"
    ]
   }
  ],

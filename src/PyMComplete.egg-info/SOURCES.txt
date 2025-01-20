@@ -1,5 +1,6 @@
 README.md
 setup.py
+src/PyMComplete/CropSelector.py
 src/PyMComplete/__init__.py
 src/PyMComplete/batch_segment.py
 src/PyMComplete/bodenmiller_mcd_extract.py

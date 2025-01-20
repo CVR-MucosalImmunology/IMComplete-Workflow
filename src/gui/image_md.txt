@@ -1,0 +1,3 @@
+# Other Image Formats
+
+For example, immunofluorscent data, can be utilised in this workflow by adding a folder for each image in the /raw folder with the .tiff inside with the same name and in a composite stack in the same order as markers found in panel.csv
