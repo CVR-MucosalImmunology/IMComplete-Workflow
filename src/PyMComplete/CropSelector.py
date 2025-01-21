@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 import ipywidgets as widgets
 from IPython.display import display, clear_output
-from matplotlib.widgets import RectangleSelector
+from matplotlib.widgets import RectangleSelector 
 
 def CropSelector(rootdir, projdir):
     """

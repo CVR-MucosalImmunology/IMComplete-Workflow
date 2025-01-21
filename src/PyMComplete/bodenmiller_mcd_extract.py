@@ -13,7 +13,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, panel="panel.csv"):
     print("Gathering Directories...")
     os.chdir(os.path.join(rootdir, projdir))
 
-    images_dir = Path(os.path.join(rootdir, projdir, "analysis/1_image_out"))
+    images_dir = Path(os.path.join(rootdir, projdir, "analysis/1_image_out")) 
     segment_fold_dir = Path(os.path.join(rootdir, projdir, "analysis/3_segmentation"))
     segment_dir = Path(os.path.join(segment_fold_dir, "3b_forSeg"))
     output_dir = Path(os.path.join(segment_fold_dir, "3a_fullstack"))

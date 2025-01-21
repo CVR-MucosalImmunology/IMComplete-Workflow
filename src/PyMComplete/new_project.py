@@ -10,7 +10,7 @@ def newProj(rootdir, projdir):
         project_name (str): The name of the new project folder.
     """
     if os.path.isdir(os.path.join(rootdir,projdir)):
-        print("Directory does not exist")
+        print("Directory does not exist") 
         return
 
     # Define all required subdirectories

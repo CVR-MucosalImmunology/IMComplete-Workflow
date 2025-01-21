@@ -5,7 +5,16 @@ import numpy as np
 import pandas as pd
 from skimage import exposure, img_as_uint
 
-def prep_cellpose(rootdir, projdir, nucleus="DNA", resolution=1, crop_size=200):
+def prep_cellpose(rootdir, 
+                  projdir, 
+                  nucleus="DNA", 
+                  resolution=1, 
+                  crop_size=200,
+                  panel_dir = "panel.csv",
+                  images_dir = "image.csv",
+                  im_from = "analysis/3_segmentation/3b_forSeg", 
+                  full_to = "analysis/3_segmentation/3d_cellpose_full",
+                  crop_to = "analysis/3_segmentation/3c_cellpose_crop"): 
     """
     Prepares images for Cellpose by:
       1) Normalizing and creating a composite stack [0=empty, 1=surface_mean, 2=DNA].
@@ -16,11 +25,11 @@ def prep_cellpose(rootdir, projdir, nucleus="DNA", resolution=1, crop_size=200):
       4) Saving the cropped version to 3c_cellpose_crop.
     """
     # Directories
-    dir_images = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3b_forSeg")
-    im_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3d_cellpose_full")
-    crop_output = os.path.join(rootdir, projdir, "analysis", "3_segmentation", "3c_cellpose_crop")
-    panel_file = os.path.join(rootdir, projdir, "panel.csv")
-    image_csv = os.path.join(rootdir, projdir, "image.csv")  # <--- New: the CSV with Crop coords
+    dir_images = os.path.join(rootdir, projdir, im_from)
+    im_output = os.path.join(rootdir, projdir, full_to)
+    crop_output = os.path.join(rootdir, projdir,crop_to)
+    panel_file = os.path.join(rootdir, projdir,panel_dir)
+    image_csv = os.path.join(rootdir, projdir,images_dir)  # <--- New: the CSV with Crop coords
 
     # Read panel.csv
     panel = pd.read_csv(panel_file)
@@ -117,6 +126,6 @@ def prep_cellpose(rootdir, projdir, nucleus="DNA", resolution=1, crop_size=200):
         tifffile.imwrite(crop_output_path, cropped)
         print(f"{image_file}: random-cropped at (x={rand_x}, y={rand_y}, size={crop_size_px}).")
 
-    df_image.to_csv(os.path.join(rootdir, projdir, "image.csv"), index=False)
+    df_image.to_csv(os.path.join(rootdir, projdir, images_dir), index=False)
     print("Done!")
 

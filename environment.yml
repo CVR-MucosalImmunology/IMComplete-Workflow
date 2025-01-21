@@ -33,4 +33,3 @@ dependencies:
         - PyQt5 
         - cellpose[gui] 
         - ttkbootstrap
-        - tkinter

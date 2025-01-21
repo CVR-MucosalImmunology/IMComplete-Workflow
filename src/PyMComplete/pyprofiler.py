@@ -12,7 +12,11 @@ def pyprofiler(rootdir = "",
                mean = 1, 
                shape = 1, 
                geometry = 1, 
-               compartment = 1):
+               compartment = 1,
+               mask_dir =  "analysis/3_segmentation/3e_cellpose_mask",
+               image_dir = "analysis/3_segmentation/3a_fullstack", 
+               compartment_dir =  "analysis/3_segmentation/3f_compartments", 
+               out_dir = "analysis/4_pyprofiler_output/cell.csv"):
 
     # Check for CUDA availability
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,9 +26,9 @@ def pyprofiler(rootdir = "",
     #os.chdir(os.path.join(rootdir, projdir))
 
     # Define directories for masks, stacks, and compartments
-    masks_dir = os.path.join(rootdir,projdir, "analysis/3_segmentation/3e_cellpose_mask")
-    stacks_dir = os.path.join(rootdir,projdir, "analysis/3_segmentation/3a_fullstack")
-    compartments_dir = os.path.join(rootdir,projdir, "analysis/3_segmentation/3f_compartments")
+    masks_dir = os.path.join(rootdir,projdir, mask_dir)
+    stacks_dir = os.path.join(rootdir,projdir, image_dir)
+    compartments_dir = os.path.join(rootdir,projdir, compartment_dir)
 
     # Get list of masks and stacks
     mask_files = [f for f in os.listdir(masks_dir) if f.endswith(('.tif', '.tiff'))]
@@ -158,7 +162,7 @@ def pyprofiler(rootdir = "",
     final_df = pd.DataFrame(all_results)
 
     # Save to CSV
-    output_path = os.path.join(rootdir,projdir, "analysis/4_pyprofiler_output/cell_data_combined.csv")
+    output_path = os.path.join(rootdir,projdir, out_dir)
     final_df.to_csv(output_path, index=False)
 
     print("Processing complete.")

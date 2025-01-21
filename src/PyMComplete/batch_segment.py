@@ -14,12 +14,15 @@ def batch_segment(rootdir="",
               channels = [2, 3],
               cell_diameter = 14.7,
               flow_threshold = 1,
-              cellprob_threshold = -3
+              cellprob_threshold = -3,
+              model_dir ="analysis/3_segmentation/3c_cellpose_crop/models",
+              full_from = "analysis/3_segmentation/3d_cellpose_full",
+              crop_to = "analysis/3_segmentation/3e_cellpose_mask"
               ):
     
     # Define Cellpose model
     if model is not None: 
-        model_path = os.path.join(rootdir, projdir, "analysis/3_segmentation/3c_cellpose_crop/models", model)
+        model_path = os.path.join(rootdir, projdir,model_dir, model)
         if os.path.exists(model_path):
             print("Choosing ", model_path)
             model = models.CellposeModel(pretrained_model=model_path)
@@ -42,8 +45,8 @@ def batch_segment(rootdir="",
 
     # Set and create directories
     analysis = Path(os.path.join(rootdir, projdir))
-    image_dir = analysis / "analysis/3_segmentation/3d_cellpose_full"
-    mask_dir = analysis / "analysis/3_segmentation/3e_cellpose_mask"
+    image_dir = analysis / full_from
+    mask_dir = analysis / crop_to
 
     # Call logger_setup to have output of cellpose written
     logger_setup()
