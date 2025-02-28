@@ -1,3 +1,0 @@
-rootdir = "directory_to_image_analysis_folder" #e.g. /Users/thomasoneil/Desktop/ImagingAnalysis/
-projdir = "name_of_your_current_project" # e.g. IBD_IMC_data
- 

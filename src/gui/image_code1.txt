@@ -1,7 +1,0 @@
- from PyMComplete import check_extract
-
-check_extract(
-    rootdir=rootdir,
-    projdir=projdir,
-    crop=200
-)

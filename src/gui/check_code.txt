@@ -1,3 +1,0 @@
-from PyMComplete import check_setup
-
-check_setup() 

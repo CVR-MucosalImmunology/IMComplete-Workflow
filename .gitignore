@@ -10,5 +10,4 @@ MoveCellsApp/ClusterModTracker.csv
 MoveCellsApp/new_spe_subset.rds
 
 testing/*
-old_script/*
-src/gui
+ignore
