@@ -1,24 +1,24 @@
-# Import libraries
 import os
 import skimage.io
 from cellpose import models
 from cellpose.io import logger_setup
-import shutil
 from pathlib import Path
 import tifffile
 
-def batch_segment(rootdir="",
-              projdir="",
-              model = None, 
-              builtin_model = None, 
-              channels = [2, 3],
-              cell_diameter = 14.7,
-              flow_threshold = 1,
-              cellprob_threshold = -3,
-              model_dir ="analysis/3_segmentation/3c_cellpose_crop/models",
-              full_from = "analysis/3_segmentation/3d_cellpose_full",
-              crop_to = "analysis/3_segmentation/3e_cellpose_mask"
-              ):
+def BatchSegment(
+        rootdir,
+        projdir,
+        model = None, 
+        builtin_model = None, 
+        channels = [2, 3],
+        cell_diameter: int,
+        flow_threshold: int,
+        cellprob_threshold: int,
+        model_dir ="analysis/3_segmentation/3a_cellpose_crop/models",
+        full_from = "analysis/3_segmentation/3b_cellpose_full",
+        mask_to = "analysis/3_segmentation/3c_cellpose_mask",
+        suffix = "_mask"
+        ):
     
     # Define Cellpose model
     if model is not None: 
@@ -46,22 +46,22 @@ def batch_segment(rootdir="",
     # Set and create directories
     analysis = Path(os.path.join(rootdir, projdir))
     image_dir = analysis / full_from
-    mask_dir = analysis / crop_to
+    mask_dir = analysis / mask_to
 
     # Call logger_setup to have output of cellpose written
     logger_setup()
 
     # Get list of image files
-    files = [os.path.join(image_dir, f) for f in os.listdir(image_dir) if f.endswith(".tiff")]  # Adjust the file extension if necessary
+    files = [os.path.join(image_dir, f) for f in os.listdir(image_dir) if f.endswith(".tiff")] 
     imgs = [tifffile.imread(f) for f in files]
 
     # Run segmentation
-    masks, flows, styles, diams  = model.eval(imgs, diameter=cell_diameter, flow_threshold=flow_threshold, cellprob_threshold=cellprob_threshold, channels=channels)
+    masks, flows, styles  = model.eval(imgs, diameter=cell_diameter, flow_threshold=flow_threshold, cellprob_threshold=cellprob_threshold, channels=channels)
 
     # Save mask images
     for idx, mask in enumerate(masks):
         original_path = Path(files[idx])
-        new_path = mask_dir / (original_path.stem + "_mask.tif")
+        new_path = mask_dir / (original_path.stem + suffix +".tif")
         skimage.io.imsave(new_path, mask)
 
     print("Done!")

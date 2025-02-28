@@ -3,79 +3,68 @@ import numpy as np
 import pandas as pd
 import tifffile as tiff
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 import ipywidgets as widgets
 from IPython.display import display, clear_output
 from matplotlib.widgets import RectangleSelector 
 
-def CropSelector(rootdir, projdir):
-    """
-    An interactive widget to:
-      1. Pick an image folder from analysis/1_image_out.
-      2. Pick a channel (from panel.csv, "Target" column).
-      3. Draw a rectangle on the displayed image.
-      4. Click "Crop" to see the cropped region side-by-side.
-      5. Click "Save" to store the crop coords "x_y_w_h" in samples.csv,
-         matching the row where samples['Image'] equals the selected image name.
+def CropSelector(
+        rootdir:str, 
+        projdir:str,
+        panel_path = "panel.csv",
+        image_path = "image.csv",
+        images_dir = "analysis/2_cleaned",
+        suffix  = "_cleaned"):
+    
+    project_path = Path(rootdir) / projdir
+    im_dir =  project_path / images_dir
+    panel_path = project_path / panel_path
+    sample_csv_path = project_path / image_path
 
-    Expected Directory Structure:
-      rootdir/
-        projdir/
-          panel.csv            <-- must have column 'Target'
-          image.csv          <-- must have column 'Image'
-          analysis/
-            1_image_out/
-              SampleA/         <-- subfolder name
-                SampleA.tif    <-- single TIF stack
-              SampleB/
-                SampleB.tif
-              ...
-
-    Parameters
-    ----------
-    rootdir : str
-        The root directory of your project.
-    projdir : str
-        A subdirectory of rootdir for the project.
-    """
-
-    #--------------------------------------------------------------------------
-    # 1. Setup Paths and Read CSVs
-    #--------------------------------------------------------------------------
-    im_dir = os.path.join(rootdir, projdir, "analysis", "1_image_out")
-   
-    panel_path = os.path.join(rootdir, projdir, "panel.csv")
     if not os.path.exists(panel_path):
         raise FileNotFoundError(f"Panel file not found: {panel_path}")
     panel = pd.read_csv(panel_path)
 
+    if not os.path.exists(sample_csv_path):
+        raise FileNotFoundError(f"Image file not found: {sample_csv_path}")
+    samples = pd.read_csv(sample_csv_path)
+
+    if "Image" not in samples.columns:
+        raise ValueError("image.csv must contain an 'Image' column.")
     if "Target" not in panel.columns:
         raise ValueError("panel.csv must contain a 'Target' column for channel names.")
 
     # We'll use the "Target" column as channel names
-    channel_names = panel["Target"].tolist()
+    channel_names = panel.loc[panel['Full'] == 1, 'Target'].tolist()
     num_channels  = len(channel_names)
 
     # Subfolders in 1_image_out
-    subfolders = [
-        d for d in os.listdir(im_dir)
-        if os.path.isdir(os.path.join(im_dir, d)) and not d.startswith('.')
-    ]
-    subfolders.sort()
+    # Check if im_dir contains subdirectories or TIFF files directly
+    subdirs = [d for d in os.listdir(im_dir) if os.path.isdir(os.path.join(im_dir, d))]
+    tiff_files = []
 
-    # image.csv
-    sample_csv_path = os.path.join(rootdir, projdir, "image.csv")
-    if not os.path.exists(sample_csv_path):
-        raise FileNotFoundError(f"Image file not found: {sample_csv_path}")
-    samples = pd.read_csv(sample_csv_path)
-    if "Image" not in samples.columns:
-        raise ValueError("image.csv must contain an 'Image' column.")
+    if subdirs:
+        # If there are subdirectories, list TIFF files within each subdirectory
+        for subdir in subdirs:
+            subdir_path = os.path.join(im_dir, subdir)
+            tiff_files.extend([
+                os.path.join(subdir, f) for f in os.listdir(subdir_path)
+                if f.endswith(".tif") or f.endswith(".tiff")
+            ])
+    else:
+        # If no subdirectories, list TIFF files directly in im_dir
+        tiff_files = [
+            f for f in os.listdir(im_dir)
+                if f.endswith(".tif") or f.endswith(".tiff")
+        ]
 
-    #--------------------------------------------------------------------------
+    tiff_files.sort()
+    
     # 2. Create Interactive Widgets
-    #--------------------------------------------------------------------------
+    
     image_dropdown = widgets.Dropdown(
-        options=subfolders,
+        options=tiff_files,
         description='Image:',
         layout=widgets.Layout(width='200px')
     )
@@ -150,16 +139,8 @@ def CropSelector(rootdir, projdir):
                 return
 
             # Build the path to the TIF file (expected one TIF in the subfolder)
-            subfolder_path = os.path.join(im_dir, selected_image_name)
-            tif_files = [
-                f for f in os.listdir(subfolder_path)
-                if f.lower().endswith('.tif') or f.lower().endswith('.tiff')
-            ]
-            if len(tif_files) != 1:
-                print(f"Warning: expected 1 TIF in {subfolder_path}, found {len(tif_files)}.")
-                return
+            tif_path = os.path.join(im_dir, selected_image_name)
 
-            tif_path = os.path.join(subfolder_path, tif_files[0])
 
             # Read the stack
             stack = tiff.imread(tif_path)
@@ -245,6 +226,8 @@ def CropSelector(rootdir, projdir):
         where samples['Image'] equals the selected image.
         """
         selected_image_name = image_dropdown.value
+        imagename = os.path.splitext(selected_image_name)[0].replace(suffix, "")
+
         x, y, w, h = roi["x"], roi["y"], roi["w"], roi["h"]
 
         if w <= 0 or h <= 0:
@@ -254,9 +237,9 @@ def CropSelector(rootdir, projdir):
 
         # Find the row in samples where 'Image' = selected_image_name
         # If multiple rows match, will update all... 
-        mask = (samples["Image"] == selected_image_name)
+        mask = (samples["Image"] == imagename)
         if not mask.any():
-            print(f"No row in image.csv with Image == '{selected_image_name}'.")
+            print(f"No row in image.csv with Image == '{imagename}'.")
             return
         
         #Check if Crop exists as a column
@@ -268,7 +251,7 @@ def CropSelector(rootdir, projdir):
 
         # Save back to CSV
         samples.to_csv(sample_csv_path, index=False)
-        print(f"Saved coords '{coords_str}' for image '{selected_image_name}' into image.csv.")
+        print(f"Saved coords '{coords_str}' for image '{imagename}' into image.csv.")
 
     #--------------------------------------------------------------------------
     # 7. Wire up callbacks
@@ -296,3 +279,4 @@ def CropSelector(rootdir, projdir):
 
     # Trigger an initial display
     display_image()
+

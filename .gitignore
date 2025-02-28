@@ -8,8 +8,7 @@ analysis
 raw
 MoveCellsApp/ClusterModTracker.csv
 MoveCellsApp/new_spe_subset.rds
-testing/PyProfiler/20230807_205021_S2_C902_P99_N99_F001.TIF
-testing/PyProfiler/R5882_0011_1221_1219_20230807_205021_S2_C902_P99_N99_F001_CpSeg_mask.tif
-testing/PyProfiler/panel.csv
-testing/PyProfiler/R5882_0011_1221_1219_F001_cellmeta.csv
-/testing
+
+testing/*
+old_script/*
+src/gui

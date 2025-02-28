@@ -1,7 +1,7 @@
 import os
 import csv
 
-def newProj(rootdir, projdir):
+def NewProject(rootdir, projdir):
     """
     Creates a structured project folder with the given root directory and project name.
 
@@ -15,24 +15,22 @@ def newProj(rootdir, projdir):
 
     # Define all required subdirectories
     acquisitions_dir = os.path.join(rootdir, projdir, "analysis/1_image_out")
-    denoise_dir = os.path.join(rootdir, projdir, "analysis/2_cleaned")
+    cleaned_dir = os.path.join(rootdir, projdir, "analysis/2_cleaned")
     segment_fold_dir = os.path.join(rootdir, projdir, "analysis/3_segmentation")
-    output_dir = os.path.join(segment_fold_dir, "3a_fullstack")
-    segment_dir = os.path.join(segment_fold_dir, "3b_forSeg")
-    crop_output = os.path.join(segment_fold_dir, "3c_cellpose_crop")
-    im_output = os.path.join(segment_fold_dir, "3d_cellpose_full")
-    mask_dir = os.path.join(segment_fold_dir, "3e_cellpose_mask")
-    compart = os.path.join(segment_fold_dir, "3f_compartments")
+    crop_output = os.path.join(segment_fold_dir, "3a_cellpose_crop")
+    im_output = os.path.join(segment_fold_dir, "3b_cellpose_full")
+    mask_dir = os.path.join(segment_fold_dir, "3c_cellpose_mask")
+    compart = os.path.join(segment_fold_dir, "3d_compartments")
     pyprof_out = os.path.join(rootdir, projdir, "analysis/4_cellprofiler_output")
     R_out = os.path.join(rootdir, projdir, "analysis/5_R_analysis")
-    meta_out = os.path.join(rootdir, projdir, ".meta")
+    #meta_out = os.path.join(rootdir, projdir, ".meta")
 
     # Create directories
     os.makedirs(os.path.join(rootdir, projdir), exist_ok=True)
     os.makedirs(os.path.join(rootdir, projdir, "raw"), exist_ok=True)
     os.makedirs(os.path.join(rootdir, projdir, "analysis"), exist_ok=True)
     os.makedirs(acquisitions_dir, exist_ok=True)
-    os.makedirs(denoise_dir, exist_ok=True)
+    os.makedirs(cleaned_dir, exist_ok=True)
     os.makedirs(segment_fold_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(segment_dir, exist_ok=True)

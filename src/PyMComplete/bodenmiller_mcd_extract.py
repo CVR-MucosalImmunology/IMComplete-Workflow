@@ -8,7 +8,7 @@ from imcsegpipe.utils import sort_channels_by_mass
 import os
 import csv
 
-def bodenmiller_mcd_extract(rootdir, projdir, panel="panel.csv"):
+def bodenmiller_mcd_extract(rootdir, projdir, panel_dir="panel.csv"):
 
     print("Gathering Directories...")
     os.chdir(os.path.join(rootdir, projdir))
@@ -54,7 +54,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, panel="panel.csv"):
     ]
 
     # Read the panel.csv
-    panel = pd.read_csv("panel.csv")
+    panel = pd.read_csv(panel_dir)
     print("Generating Fullstacks...")
 
     # Step 2: Generate image stacks (_full and _segment)
@@ -76,7 +76,7 @@ def bodenmiller_mcd_extract(rootdir, projdir, panel="panel.csv"):
                 analysis_channels=sort_channels_by_mass(
                     panel.loc[panel["Segment"] == 1, "Conjugate"].tolist()
                 ),
-                suffix="_segment",
+                suffix="_CpSeg",
                 hpf=50.0
             )
     # Specify the file name

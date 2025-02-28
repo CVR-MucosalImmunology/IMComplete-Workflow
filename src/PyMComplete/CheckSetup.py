@@ -1,8 +1,6 @@
-import subprocess
-import sys
 import pkg_resources
 
-def check_setup(torch=1):
+def CheckSetup(torch=1):
     """
     Checks for required Python packages and verifies CUDA installation.
 
@@ -12,10 +10,13 @@ def check_setup(torch=1):
     print("Checking required packages in the current Conda environment...\n")
     
     required_packages = {
+
         "imcsegpipe": "1.0.0",
+        "pymcomplete":"",
         "readimc": "0.8.0",
         "pip": "",
         "numpy": "",
+        "jupyter" : "",
         "jupyterlab": "",
         "jupytext": "",
         "cellpose" : "",
@@ -31,9 +32,11 @@ def check_setup(torch=1):
         "opencv-python": "", 
         "scikit-image": "",
         "ipywidgets" : "",
-        "jupyter" : "",
         "ipykernel" : "",
+        "ipympl": "",
         "plotly": "",
+        "ttkbootstrap":"", 
+        "PyQt5":"",
     }
 
     missing_packages = {}
@@ -63,5 +66,4 @@ def check_setup(torch=1):
             print("  GPU acceleration via CUDA is available")
         else:
             print("  GPU acceleration has not been prepared. Consult https://pytorch.org/get-started/previous-versions/\nand try again")
-
 

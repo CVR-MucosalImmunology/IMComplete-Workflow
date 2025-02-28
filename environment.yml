@@ -27,6 +27,7 @@ dependencies:
   - ipykernel 
   - ipympl
   - plotly
+  - ipywidgets
   - pip:
         - -e ./
         - -e ../ImcSegmentationPipeline

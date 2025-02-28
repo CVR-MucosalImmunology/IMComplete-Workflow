@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import tifffile as tiff
@@ -11,9 +11,12 @@ from skimage import img_as_float
 from skimage.filters import gaussian
 from scipy.ndimage import uniform_filter
 
-def check_extract(
-    rootdir,
-    projdir,
+
+def CheckExtract(
+    rootdir:str,
+    projdir:str,
+    extract_dir ="analysis/1_image_out",
+    panel_path = "panel.csv",
     crop=None
 ):
     def remove_hotpixels_threshold(img, threshold=5.0, neighborhood_size=3):
@@ -67,29 +70,14 @@ def check_extract(
         x = np.random.randint(0, w - crop_size + 1)
         return img[y:y+crop_size, x:x+crop_size]
 
-
-    """
-    A UI to explore raw TIF stacks (one TIF per subfolder in raw/),
-    with optional hotpixel removal, Gaussian blur, random cropping,
-    and adjustable contrast.
-
-    Parameters
-    ----------
-    rootdir : str
-        The root directory of your project.
-    projdir : str
-        A subdirectory of rootdir for the project.
-    crop : int or None
-        If not None, will perform a random crop of size crop×crop on the selected channel.
-    """
-
     # --------------------------------------------------------------------------
     # 1. Locate directories and panel
     # --------------------------------------------------------------------------
-    project_path = os.path.join(rootdir, projdir)
-    raw_dir = os.path.join(project_path, "raw")
+    project_path = Path(rootdir) / projdir 
+    image_dir = project_path / extract_dir
     
-    panel_path = os.path.join(project_path, "panel.csv")
+    panel_path = project_path / panel_path
+
     if not os.path.exists(panel_path):
         raise FileNotFoundError(f"Panel file not found: {panel_path}")
 
@@ -101,16 +89,15 @@ def check_extract(
     channel_names = panel["Target"].tolist()
     num_channels = len(channel_names)
 
-    # Gather subfolders in raw_dir (these are our 'images')
+    # Gather subfolders in image_dir (these are our 'images')
     subfolders = [
-        d for d in os.listdir(raw_dir)
-        if os.path.isdir(os.path.join(raw_dir, d)) and not d.startswith('.')
+        d for d in os.listdir(image_dir)
+        if os.path.isdir(os.path.join(image_dir, d)) and not d.startswith('.')
     ]
-    if not subfolders:
-        raise ValueError(f"No subfolders found in {raw_dir}.")
 
-    # Build the  widget
-    ### Dropdown to pick which image
+    if not subfolders:
+        raise ValueError(f"No subfolders found in {image_dir}.")
+
     image_dropdown = widgets.Dropdown(
         options=subfolders,
         description='Image:',
@@ -170,29 +157,21 @@ def check_extract(
         with output_display:
             clear_output(wait=True)
             
-            # Grab user inputs
-            # 1) Which image (subfolder)
             selected_image_name = image_dropdown.value
-            # 2) Which channel name
             selected_channel_name = channel_dropdown.value
-            # Convert that to a channel index
             try:
                 channel_idx = channel_names.index(selected_channel_name)
             except ValueError:
                 print(f"Channel '{selected_channel_name}' not found in panel.")
                 return
 
-            # 3) Hotpixel threshold
             hp_thresh_val = hp_threshold_text.value
-            # 4) Hotpixel neighborhood
             hp_neigh_val = hp_neighborhood_text.value
-            # 5) Gauss sigma
             gauss_val = gauss_sigma_text.value
-            # 6) Contrast range
             vmin, vmax = contrast_slider.value
 
             # Build the path to the TIF file (expected one TIF in the subfolder)
-            subfolder_path = os.path.join(raw_dir, selected_image_name)
+            subfolder_path = os.path.join(image_dir, selected_image_name)
             tif_files = [
                 f for f in os.listdir(subfolder_path)
                 if f.lower().endswith('.tif') or f.lower().endswith('.tiff')
