@@ -10,26 +10,21 @@ Nature Method of the Year in 2024 was [**spatial proteomics**](https://www.natur
 
 > Computational tools for spatial proteomics are the focus of the second Comment, from Yuval Bussi and Leeat Keren. These authors note that current image processing and analysis workflow are **well defined but fragmented**, with various steps happening back to back **rather than in an integrated fashion**. They envision a future for the field where **image processing and analysis steps work in concert** for improved biological discovery.
 
-In alignment to these comments, we have committed to provide a comprehensive and dynamic workflow. In part, we aimed to achieve this by compiling as much as we could into this pre-processing workflow. 
+In alignment with these comments, we have committed to provide a comprehensive and dynamic workflow. In part, we aimed to achieve this by compiling as much as we could into this pre-processing workflow. 
 
-Particularly, we have emphasised tools that can be performed in <strong>*one*</strong> workflow. For example, we introduce here `PyProfiler`, a tool that performs the same functions as Cell Profiler, allowing users to not leave this linear workflow and install additional applications.
+Particularly, we have emphasised tools that can be performed in <strong>*one*</strong> linear workflow. For example, we provide the function `PyProfiler`, a tool that performs the same functions as CellProfiler in extracting cell features, and RegisterImages to register IMC to IF in Python, and allowing users remain in this linear pipeline and not have to install additional applications.
 
 <hr>
 
-Some scripts adapted from [BodenmillerGroup/ImcSegmentationPipeline](https://github.com/BodenmillerGroup/ImcSegmentationPipeline) & [PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise) 
+Some scripts adapted from [BodenmillerGroup/ImcSegmentationPipeline](https://github.com/BodenmillerGroup/ImcSegmentationPipeline)
 
 <i>**Therefore, make sure to also reference these studies:**</i>  
 - Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end workflow for multiplexed image processing and analysis. [Nat Protoc](https://doi.org/10.1038/s41596-023-00881-0) (2023).  
-- Lu P, Oetjen K, Bender D, et al. IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry. [Nature Communications](https://www.nature.com/articles/s41467-023-37123-6), 14(1), 1601, 2023.  
+
 
 <br>
 <hr>
 
-##### Planned future additions:  
-- Simple compartmentalisation in python widget
-
-<br>
-<hr>
 
 ## Folder structure
 
@@ -53,14 +48,14 @@ ImagingAnalysis/ (root directory)
 │            └── 4_pyprofiler_output
 │     └── panel.csv
 ├── ...
-├── Experiment_name_
+├── Experiment_name_n
 ```
 <br>
 <hr> <hr>
 
 # Set up
 
-Anaconda is a program needed to run many steps of the workflow, primarily during setup. Follow the steps below to set up Anaconda and a `conda` environment:
+Anaconda is needed to run this workflow. Follow the steps below to set up Anaconda and a `conda` environment:
 
 Install [**Anaconda** ](https://www.anaconda.com/download) and navigate to the relevant command line interface:
 <br>
@@ -158,31 +153,29 @@ If you are using a jupyter notebook, you will see this...<span style="color:whit
 
 ## Workflow
 
-1. Set up (`CheckSetup()`) ✅ 
+1. Set up (`CheckSetup()`)  
 
-2. Create a new project (`NewProject()`) ✅ 
+2. Create a new project (`NewProject()`) 
 
-3. Prep the raw folder and `panel.csv` ✅ 
+3. Prep the raw folder and `panel.csv` 
 
-4. Extract images from the raw folder (`ExtractImages()`) ✅ 
+4. Extract images from the raw folder (`ExtractImages()`) 
 
-- *Optional 1:* Check filter parameters of IF data (`CheckExtract()`) ✅ 
+- *Optional 1:* Check filter parameters of IF data (`CheckExtract()`) 
 
-- *Optional 2:* Filter images (`FilterImages()`) ✅ 
+- *Optional 2:* Filter images (`FilterImages()`) 
 
-- *Optional 3:* Select crop regions for segmentation training (`CropSelector()`) ✅ 
+- *Optional 3:* Select crop regions for segmentation training (`CropSelector()`)  
 
-5. Prepare the images for Segmentation model training (`PrepCellpose()`) ✅ 
+5. Prepare the images for Segmentation model training (`PrepCellpose()`) 
 
-- *Optional 4:* Register low-resolution images with high-resolution images to improve cell segmentation (`RegisterImages()`)  ✅ 
+- *Optional 4:* Register low-resolution images with high-resolution images to improve cell segmentation (`RegisterImages()`) 
 
-6. Train a segmentation model (`cellpose`) ✅ 
+6. Train a segmentation model (`cellpose`) 
 
-- *Optional 5:* You have the option to not train a segmentation model and use a generic model.  ✅ 
+- *Optional 5:* You have the option to not train a segmentation model and use a generic model.  
 
 7. Batch segment the images and generate cell masks (`BatchSegment()`)
-
-- *Optional 6 <strong>in development</strong>:* Generate masks for compartments or distance metrics. (*Currently in ImageJ/Qupath* - want to add simple `add_compartment_mask()` or `add_threshold_mask()`) 
 
 8. Extract data from your images using the cell segment masks (`PyProfiler()`)
 
