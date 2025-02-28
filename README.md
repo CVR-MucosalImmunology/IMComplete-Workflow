@@ -12,7 +12,7 @@ Nature Method of the Year in 2024 was [**spatial proteomics**](https://www.natur
 
 In alignment with these comments, we have committed to provide a comprehensive and dynamic workflow. In part, we aimed to achieve this by compiling as much as we could into this pre-processing workflow. 
 
-Particularly, we have emphasised tools that can be performed in <strong>*one*</strong> linear workflow. For example, we provide the function `PyProfiler`, a tool that performs the same functions as CellProfiler in extracting cell features, and RegisterImages to register IMC to IF in Python, and allowing users remain in this linear pipeline and not have to install additional applications.
+Particularly, we have emphasised tools that can be performed in <strong>*one*</strong> linear workflow. For example, we provide the function `PyProfiler`, a tool that performs the same functions as CellProfiler in extracting cell features, and `RegisterImages` to register IMC to IF in Python, and allowing users remain in this linear pipeline and not have to install additional applications.
 
 <hr>
 
@@ -141,13 +141,6 @@ You will need to install Pytorch and pytorch-cuda versions that are suitable for
 conda install pytorch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 pytorch-cuda=12.4 -c pytorch -c nvidia
 ```
 
-<hr>
-
-#### **Step 7:** Select the IMComplete kernel in your IDE
-
-If you are using VSCode, you'll see this option in the top right of the window. 
-
-If you are using a jupyter notebook, you will see this...<span style="color:white; background:red">[TO ADD]</span>
 
 <hr><hr>
 
