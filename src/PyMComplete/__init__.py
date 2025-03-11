@@ -8,6 +8,7 @@ from .CropSelector import CropSelector
 from .PrepCellpose import PrepCellpose
 from .BatchSegment import BatchSegment
 from .PyProfiler import PyProfiler
+from .utils import ConvertImages
 
 __all__ = ["NewProject", 
            "CheckSetup", 
@@ -19,4 +20,5 @@ __all__ = ["NewProject",
            "PrepCellpose",
            "BatchSegment",
            "PyProfiler",
+           "ConvertImages"
            ]
