@@ -141,6 +141,15 @@ You will need to install Pytorch and pytorch-cuda versions that are suitable for
 conda install pytorch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 pytorch-cuda=12.4 -c pytorch -c nvidia
 ```
 
+<hr>
+
+#### **Step 7:** Install cellpose
+
+Cellpose is used for cell segmentation. We'll install the gui version for the user-friendly version. If you experience errors installing cellpose, refer to the [cellpose installation instructions](https:://cellpose.readthedocs.io/en/latest/installation.html)
+
+```bash
+python -m pip install cellpose[gui]
+```
 
 <hr><hr>
 

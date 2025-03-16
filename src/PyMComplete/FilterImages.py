@@ -4,10 +4,10 @@ from skimage import io
 from scipy.ndimage import uniform_filter
 from skimage.filters import gaussian
 
-def FilterImages(rootdir:str,
-                   projdir:str,
+def FilterImages(rootdir,
+                   projdir,
                    panel_filename="panel.csv",
-                   format:str, 
+                   format = "imc", 
                    hotpixel=None, 
                    gauss_blur=None, 
                    fullstack = True, 
@@ -127,13 +127,3 @@ def FilterImages(rootdir:str,
 
     elif format != "if" and format != "imc":
         print("Format not specified. Choose 'imc' or 'if' specifically and run again.\n")
-
-filter_images(rootdir=rootdir,
-                   projdir="project",
-                   format = 'if',
-                   panel_filename="panel.csv",
-                   hotpixel=None,
-                   gauss_blur=None,
-                   hpf=50,
-                   extract_dir = "analysis/1_image_out",
-                   clean_dir = "analysis/2_cleaned")
