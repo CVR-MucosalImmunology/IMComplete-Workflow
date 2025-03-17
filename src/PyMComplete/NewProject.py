@@ -32,8 +32,6 @@ def NewProject(rootdir, projdir):
     os.makedirs(acquisitions_dir, exist_ok=True)
     os.makedirs(cleaned_dir, exist_ok=True)
     os.makedirs(segment_fold_dir, exist_ok=True)
-    os.makedirs(output_dir, exist_ok=True)
-    os.makedirs(segment_dir, exist_ok=True)
     os.makedirs(crop_output, exist_ok=True)
     os.makedirs(im_output, exist_ok=True)
     os.makedirs(mask_dir, exist_ok=True)
