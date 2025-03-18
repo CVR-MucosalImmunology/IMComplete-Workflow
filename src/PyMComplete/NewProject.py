@@ -10,7 +10,7 @@ def NewProject(rootdir, projdir):
         project_name (str): The name of the new project folder.
     """
     if os.path.isdir(os.path.join(rootdir,projdir)):
-        print("Directory does not exist") 
+        print("Directory already exists! Check the contents and continue, or choose a new Project name.") 
         return
 
     # Define all required subdirectories
@@ -21,7 +21,7 @@ def NewProject(rootdir, projdir):
     im_output = os.path.join(segment_fold_dir, "3b_cellpose_full")
     mask_dir = os.path.join(segment_fold_dir, "3c_cellpose_mask")
     compart = os.path.join(segment_fold_dir, "3d_compartments")
-    pyprof_out = os.path.join(rootdir, projdir, "analysis/4_cellprofiler_output")
+    pyprof_out = os.path.join(rootdir, projdir, "analysis/4_pyprofiler_output")
     R_out = os.path.join(rootdir, projdir, "analysis/5_R_analysis")
     #meta_out = os.path.join(rootdir, projdir, ".meta")
 

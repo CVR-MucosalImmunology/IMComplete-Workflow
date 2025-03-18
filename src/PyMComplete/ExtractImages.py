@@ -11,6 +11,9 @@ def ExtractImages(rootdir:str,
     project_path = Path(rootdir) / projdir
     images_dir = project_path / extract_dir
     raw = project_path / rawimage_dir
+    panel_dir = project_path / panel_dir
+
+    panel = pd.read_csv(panel_dir)
     
     if format == "if":
         print("Extracting Immunofluorescent Images...\n")
@@ -98,6 +101,6 @@ def ExtractImages(rootdir:str,
                 })
 
     image_df = pd.DataFrame(image_data)
-    image_csv_path = images_dir / "image.csv"
+    image_csv_path = project_path / "image.csv"
     image_df.to_csv(image_csv_path, index=False)
     print(f"image.csv created at {image_csv_path}")

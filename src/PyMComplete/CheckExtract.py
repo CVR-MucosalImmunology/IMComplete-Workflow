@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import tifffile as tiff
 import matplotlib.pyplot as plt
+import os 
 
 import ipywidgets as widgets
 from IPython.display import display, clear_output

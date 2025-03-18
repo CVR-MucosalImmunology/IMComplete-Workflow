@@ -14,7 +14,7 @@ dependencies:
   - natsort
   - tifffile==2024.8.10
   - brotlipy
-  - matplotlib 
+  - conda-forge::matplotlib 
   - pandas 
   - panel 
   - opencv 
@@ -22,10 +22,9 @@ dependencies:
   - ipywidgets 
   - jupyter 
   - ipykernel 
-  - ipympl
+  - conda-forge::ipympl=0.9.6
   - plotly
   - ipywidgets
-  - pillow
   - pip:
         - -e ./
         - -e ../ImcSegmentationPipeline

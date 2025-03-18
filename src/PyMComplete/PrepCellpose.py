@@ -164,6 +164,6 @@ def PrepCellpose(
         print(f"{image_file}: random-cropped at (x={rand_x}, y={rand_y}, size={crop_size_px})\n.")
 
     # Write the updated image.csv back to disk
-    df_image.to_csv(os.path.join(rootdir, projdir, images_dir), index=False)
+    df_image.to_csv(image_csv, index=False)
     print("\nDone!\n")
 

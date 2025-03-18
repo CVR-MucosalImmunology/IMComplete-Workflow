@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from skimage import io
+from skimage import io,  img_as_uint
 from scipy.ndimage import uniform_filter
 from skimage.filters import gaussian
 
@@ -13,7 +13,8 @@ def FilterImages(rootdir,
                    fullstack = True, 
                    hpf=50,
                    extract_dir = "analysis/1_image_out", 
-                   clean_dir = "analysis/2_cleaned"):
+                   clean_dir = "analysis/2_cleaned", 
+                   suffix="_cleaned"):
     
     project_path = Path(rootdir) / projdir
 
@@ -48,9 +49,8 @@ def FilterImages(rootdir,
                 blurred = gaussian(img, sigma=sigma, preserve_range=True)
                 return blurred.astype(img.dtype)
     
-        full_stack = []
         for sample_dir in images_dir.iterdir():
-
+            full_stack = []
             # Skip hidden folders (for whatever reason they may exist)
             if not sample_dir.is_dir() or sample_dir.name.startswith("."):
                 continue
@@ -92,13 +92,13 @@ def FilterImages(rootdir,
                 # Replace the channel in the stack
                 image[idx, :, :] = channel
 
-            cleaned_image_name = f"{sample_dir.name}_cleaned.tiff"
+            cleaned_image_name = f"{sample_dir.name}{suffix}.tiff"
             cleaned_image_path = cleaned_dir / cleaned_image_name
             
             if fullstack == True:
                 if len(full_stack) > 0:
                     full_stack = np.stack(full_stack)
-                    io.imsave(str(full_tiff_path), full_stack)
+                    io.imsave(str(cleaned_image_path), full_stack)
                 else:
                     print(f"Warning: No 'Full' channels found for sample '{sample_dir.name}'.")
             else:
@@ -121,7 +121,7 @@ def FilterImages(rootdir,
                     analysis_channels=sort_channels_by_mass(
                         panel.loc[panel["Full"] == 1, "Conjugate"].tolist()
                     ),
-                    suffix="_cleaned",
+                    suffix=suffix,
                     hpf=hpf
                 )
 
